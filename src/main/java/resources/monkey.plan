@@ -1,0 +1,37 @@
+fluents: at(O,L) requires object(O), #int(L).
+         onBox.
+         hasBanana.
+
+actions: walk(L) requires #int(L).
+         pushBox(L) requires #int(L).
+         climbBox.
+         graspBanana.
+
+always:  caused at(monkey,L) after walk(L).
+         caused -at(monkey,L) after walk(L1), at(monkey,L), L<>L1.
+         executable walk(L) if not onBox.
+
+         caused at(monkey,L) after pushBox(L).
+         caused at(box,L) after pushBox(L).
+         caused -at(monkey,L) after pushBox(L1), at(monkey,L), L<>L1.
+         caused -at(box,L) after pushBox(L1), at(box,L), L<>L1.
+         executable pushBox(L) if at(monkey,L1), at(box,L1), not onBox.
+
+         caused onBox after climbBox.
+         executable climbBox if not onBox, at(monkey,L), at(box,L).
+
+         caused hasBanana after graspBanana.
+         executable graspBanana if onBox, at(monkey,L), at(banana,L).
+
+         inertial at(O,L).
+         inertial onBox.
+         inertial hasBanana.
+
+initially: at(monkey,1).
+           at(box,2).
+           at(banana,3).
+
+noConcurrency.
+
+goal: hasBanana ? (4)
+
